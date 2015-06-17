@@ -1,0 +1,2 @@
+# tryqt
+Try some Qt
