@@ -1,0 +1,7 @@
+cmake_minimum_required( VERSION 3.2 )
+project( HELLO )
+find_package( Qt4 REQUIRED )
+set( QT_DONT_USE_QTGUI TRUE )
+include( ${QT_USE_FILE} )
+add_executable( hello main.cpp)
+target_link_libraries( hello ${QT_LIBRARIES} )
