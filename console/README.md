@@ -11,7 +11,7 @@ g++ main.cpp \
 ```
 
 
-### QMake
+### qmake
 
 hello.pro:
 ```
@@ -25,7 +25,7 @@ generate:
 $ mkdir qmake && cd qmake && qmake.exe ../hello.pro
 ```
 
-### CMake
+### cmake
 
 CMakeLists.txt:
 ```
@@ -36,6 +36,16 @@ set( QT_DONT_USE_QTGUI TRUE )
 include( ${QT_USE_FILE} )
 add_executable( hello main.cpp)
 target_link_libraries( hello ${QT_LIBRARIES} )
+```
+
+we can substitute
+```
+find_package( Qt4 REQUIRED )
+set( QT_DONT_USE_QTGUI TRUE )
+```
+with
+```
+find_package(Qt4 COMPONENTS QtCore REQUIRED) # use only one component in this package
 ```
 
 ![](/data/qt-console-cmake.png)
