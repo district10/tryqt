@@ -1,4 +1,4 @@
-cmake_minimum_required( VERSION 3.2 )
+cmake_minimum_required( VERSION 2.6 )
 project( HELLO )
 find_package( Qt4 REQUIRED )
 set( QT_DONT_USE_QTGUI TRUE )
