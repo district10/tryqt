@@ -1,7 +1,7 @@
 #ifndef LMSEMULATOR_H
 #define LMSEMULATOR_H
 
-#include <QObject>
+#include <QTcpSocket>
 
 class LMSEmulator : public QTcpSocket
 {

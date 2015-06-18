@@ -18,8 +18,8 @@ TEMPLATE = app
 
 SOURCES += main.cpp \
     lmsreader.cpp \
-    lmsvm.cpp
+    lmsemulator.cpp
 
 HEADERS += \
     lmsreader.h \
-    lmsvm.h
+    lmsemulator.h
