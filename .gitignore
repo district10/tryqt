@@ -39,5 +39,5 @@ release
 Debug
 Release
 build
-
 build*
+*.pro.user
