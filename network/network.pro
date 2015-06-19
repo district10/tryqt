@@ -9,6 +9,8 @@ QT       += core
 QT       -= gui
 QT       += network
 
+# INCLUDEPATH += C:/dev/boost_1_58_0
+
 TARGET = gui
 CONFIG   += console
 CONFIG   -= app_bundle

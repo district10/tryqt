@@ -14,16 +14,21 @@ class LMSReader : public QTcpSocket
 
 public:
     explicit LMSReader(QTcpSocket *parent = 0);
-    void send(QString msg);
+    ~ LMSReader();
+    void writeLMS(QString msg);
     void test();
-    void connectLMS();
+    void connectToLMS();
+    void closeConnection();
+
+    void turnOn();
+    void turnOff();
 
 signals:
-    void hello(QString msg);
 
 public slots:
     void readLMS();
-    void world(QString msg);
+    void lmsConnectionError(QAbstractSocket::SocketError);
+    void lmsConnectionEstablished();
 
 private:
     enum LMSModes { CONFIG_FREQ_ANGRES, CONFIG_ANGSTART_ANGSTOP, OPEN, CLOSE };
@@ -31,6 +36,7 @@ private:
     QMap<LMSModes, QString> lmsConfig;
     QString lmsIP;
     quint16 lmsPort;
+    char buffer[200];
 
 };
 
