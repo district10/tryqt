@@ -19,9 +19,7 @@ TEMPLATE = app
 
 
 SOURCES += main.cpp \
-    lmsreader.cpp \
-    lmsemulator.cpp
+    lmsreader.cpp
 
 HEADERS += \
-    lmsreader.h \
-    lmsemulator.h
+    lmsreader.h

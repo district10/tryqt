@@ -7,6 +7,9 @@
 #include <iostream>
 #include <QStringList>
 
+#include <vector>
+
+using namespace std;
 
 class LMSReader : public QTcpSocket
 {
@@ -20,24 +23,34 @@ public:
     void connectToLMS();
     void closeConnection();
 
-    void turnOn();
-    void turnOff();
+    void saveData(QString filename, char *buf);
+    void parseLMSScan(string ifilename, string ofilename);
 
 signals:
+    void callToTurnOnLMS();
+    void calltoTurnOffLMS();
 
 public slots:
     void readLMS();
+    void turnOn();
+    void turnOff();
     void lmsConnectionError(QAbstractSocket::SocketError);
     void lmsConnectionEstablished();
 
 private:
-    enum LMSModes { CONFIG_FREQ_ANGRES, CONFIG_ANGSTART_ANGSTOP, OPEN, CLOSE };
+    enum LMSActions { GET_FREQ_ANGRES, GET_ANGBEG_ANGEND, TURN_ON, TURN_OFF };
     enum LMSStates { LMS_ON, LMS_OFF } lmsState;
-    QMap<LMSModes, QString> lmsConfig;
+    QMap<LMSActions, QString> lmsAction;
     QString lmsIP;
     quint16 lmsPort;
     char buffer[200];
 
-};
+    double lmsFrequency;
+    double lmsAngleBeg;
+    double lmsAngleEnd;
+    double lmsAngleRes;
+    double sz;
+
+    enum { BUFSIZE = 5000 };
 
 #endif // LMSREADER_H
