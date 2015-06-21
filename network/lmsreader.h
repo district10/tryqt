@@ -4,10 +4,12 @@
 #include <QTcpSocket>
 #include <QFile>
 #include <QMap>
-#include <iostream>
 #include <QStringList>
-
+#include <iostream>
+#include <fstream>
 #include <vector>
+
+#define M_PI 3.14
 
 using namespace std;
 
@@ -52,5 +54,6 @@ private:
     double sz;
 
     enum { BUFSIZE = 5000 };
+};
 
 #endif // LMSREADER_H

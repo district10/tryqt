@@ -27,10 +27,7 @@ LMSReader::LMSReader(QTcpSocket *parent) : QTcpSocket(parent)
             this, SLOT(turnOn()));
     connect(this, SIGNAL(calltoTurnOffLMS()),
             this, SLOT(turnOff()));
-    connect(timeout, SIGNAL(timeout()),
-            this, SLOT(turnOff()));
 
-    // timeout->start(2000);
 }
 
 LMSReader::~LMSReader()
@@ -116,7 +113,7 @@ void LMSReader::saveData(QString filename, char* buf)
     }
 }
 
-void LMSReader::parseLMSScan(string ifilename, sting ofilename)
+void LMSReader::parseLMSScan(string ifilename, string ofilename)
 {
         char STX = 0x2; // start of one Scan
         char ETX = 0x3; // end of one Scan
