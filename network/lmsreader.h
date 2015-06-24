@@ -1,19 +1,19 @@
-#ifndef LMSREADER_H
+﻿#ifndef LMSREADER_H
 #define LMSREADER_H
 
+#include <QtConcurrentRun>
+#include <QStringList>
 #include <QTcpSocket>
 #include <QThread>
 #include <QFile>
 #include <QMap>
-#include <QStringList>
-#include <QtConcurrentRun>
+
 #include <iostream>
 #include <fstream>
 
-#define M_PI 3.14
+#define M_PI 3.14159265358979323846
 
 using namespace std;
-
 
 class LMSReader : public QTcpSocket
 {
@@ -26,9 +26,12 @@ public:
     void connectToLMS();
     void closeConnection();
     void configureIPPort(QString ip, quint16 port);
-    void askforAuthorization();
+    void setAuthToAuthedClient();
     void askforAngle_Beg_End();
     void askforFrequency_Angleresolution();
+
+    void genNewPath();
+    void genNewPath(quint64 dt);
 
     void setFrequencyAngres(int freq, double angres);
     void setAngleBegEnd(double start = -45.0, double end = 225.0);
@@ -37,8 +40,6 @@ public:
     void getTimestamp();
     void logout();
 
-    void saveData(QString filename, char *buf);
-    void readRawParseThenWriteXYZ(string ifilename, string ofilename);
 
     void test();
     void test2();
@@ -49,24 +50,22 @@ public:
     void pollingOne();
 
 signals:
-    void callToTurnOnLMS();
-    void calltoTurnOffLMS();
     void angle_beg_end(int beg, int end);
     void frequency_angleresolution(int freq, double res);
+    void authorization_passed(bool auth);
 
 public slots:
     void readLMS();
     void turnOn();
     void turnOff();
     void lmsConnectionError(QAbstractSocket::SocketError);
-    void lmsConnectionEstablished();
 
 public:
     QString lmsRawPath;
     QString lmsCoorPath;
 
 private:
-    enum LMSActions {
+    enum LMSAction {
         GET_FREQ_ANGRES,
         SET_FREQ_ANGRES,
         GET_ANGBEG_ANGEND,
@@ -74,7 +73,7 @@ private:
         GET_STATUS,
         GET_TIMESTAMP,
         SET_TIMESTAMP,
-        LOG_IN,
+        AUTHORIZE,
         LOG_OUT,
         TURN_ON,
         TURN_OFF,
@@ -93,29 +92,30 @@ private:
     };
 
     enum {
-        BUFSIZE = 5000,
-        BUFNUM = 10,
         AUTHORIZATION_SUCCESS = 1,
         AUTHORIZATION_FAULURE = 0,
         ANGLE_SCALE_FACTOR = 10000, // 1/10000 Hz
         FREQUENCY_SCALE_FACTOR = 100, // 1/100 Degree
     };
 
-    char *buf[BUFNUM];
-    int bufindex;
-    size_t scancount;
-    void parser(const char *buf, int index);
+    void parser(const QStringList& bufstrlist);
 
-    enum LMSStates { LMS_ON, LMS_OFF } lmsState;
-    enum LMSReadModes {
+    enum LMSReadMode {
         READ_TEST,
         READ_NOTHING_RETURN,
         READ_PRINT_PARSE,
         READ_SAVE_PARSE,
         READ_ON_THE_FLY_PARSE
     } lmsReadMode;
+    QMap<LMSAction, QString> lmsAction;
 
-    QMap<LMSActions, QString> lmsAction;
+    enum LMSAuth {
+        AUTH_MAINTENANCE = 0x02,
+        AUTH_AUTHEDCLIENT = 0x03,
+        AUTH_SERVICELEVEL = 0x04,
+    };
+    QMap<LMSAuth, QString> lmsAuth;
+
     QString lmsAddress;
     quint16 lmsPort;
 
@@ -123,6 +123,25 @@ private:
     double lmsAngleBeg;
     double lmsAngleEnd;
     double lmsAngleRes;
+    size_t lmsCount;
+
+    const static int lmsAngleMin = -45;
+    const static int lmsAngleMax = 225;
+
+
+    // debugging flags
+    bool PRINT_BUF;
+    bool PRINT_BUF_META;
+    bool PRINT_XYZ;
+    bool PRINT_R;
+    bool PRINT_SCAN_META;
+    bool SAVE_SCAN;
+    bool SAVE_BUF;
+    bool PARSE_SCAN;
+    QString lmsFormat;
+
+    QByteArray lmsBA;
+    bool lmsMoreToRead;
 };
 
 #endif // LMSREADER_H
